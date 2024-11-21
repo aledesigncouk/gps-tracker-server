@@ -1,0 +1,22 @@
+name: Deployment
+on:
+    push: 
+        branches: [ master ]
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: FTP Deployer
+              uses: sand4rt/ftp-deployer@v1.8
+              with:
+                sftp: false
+                host: ${{ secrets.FTP_SERVER }}
+                port: 21
+                username: ${{ secrets.FTP_USER }}
+                password: ${{ secrets.FTP_PASSWORD }}
+                remote_folder: "./www.yoroxid.com/nautilus/"
+                local_folder: "./"
+                cleanup: false
+                passive: true
+                
