@@ -23,6 +23,10 @@ jobs:
                 echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
                 echo "DB_NAME=${DB_NAME}" >> .env
 
+                pwd
+                ls -la
+
+
             - name: FTP Deployer
               uses: sand4rt/ftp-deployer@v1.8
               with:
