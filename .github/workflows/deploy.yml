@@ -37,7 +37,7 @@ jobs:
                 password: ${{ secrets.FTP_PASSWORD }}
                 remote_folder: ${{ secrets.REMOTE_FOLDER }}
                 local_folder: "./"
-                exclude: "['.github/']"
-                include: "['.env']"
+                exclude: '[".github/**"]'
+                include: '[".env"]'
                 cleanup: false
                 passive: true
