@@ -17,9 +17,7 @@ jobs:
                 DB_NAME: ${{ secrets.DB_NAME }}
 
               run: |
-                # Install lftp for FTP transfers
-                sudo apt-get install -y lftp
-                
+
                 # Generate .env file locally
                 echo "DB_HOST=${DB_HOST}" > .env
                 echo "DB_USERNAME=${DB_USERNAME}" >> .env
