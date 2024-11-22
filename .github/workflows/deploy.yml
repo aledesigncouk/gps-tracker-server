@@ -24,6 +24,11 @@ jobs:
                 echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
                 echo "DB_NAME=${DB_NAME}" >> .env
 
+                lftp -u ${{ secrets.FTP_USER }},${{ secrets.FTP_PASSWORD }} ${{ secrets.FTP_SERVER }} <<EOF
+                put -O /www.yoroxid.com/nautilus/ .env
+                bye
+                EOF
+
             - name: FTP Deployer
               uses: sand4rt/ftp-deployer@v1.8
               with:
