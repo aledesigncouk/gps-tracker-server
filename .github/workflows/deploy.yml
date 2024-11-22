@@ -27,7 +27,6 @@ jobs:
                 ls -la
                 cat .env
 
-
             - name: FTP Deployer
               uses: sand4rt/ftp-deployer@v1.8
               with:
@@ -36,13 +35,9 @@ jobs:
                 port: 21
                 username: ${{ secrets.FTP_USER }}
                 password: ${{ secrets.FTP_PASSWORD }}
-                remote_folder: "./www.yoroxid.com/nautilus/"
+                remote_folder: ${{ secrets.REMOTE_FOLDER }}
                 local_folder: "./"
+                exclude: ".github/"
+                include: ".env"
                 cleanup: false
                 passive: true
-
-            # - name: Setup PHP environment
-            #   uses: shivammathur/setup-php@v2
-            #   with:
-            #     php-version: '8.1'
-            #     extensions: mysqli
