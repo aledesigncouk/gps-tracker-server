@@ -25,6 +25,7 @@ jobs:
 
                 pwd
                 ls -la
+                cat .env
 
 
             - name: FTP Deployer
