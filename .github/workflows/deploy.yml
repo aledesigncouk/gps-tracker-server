@@ -24,8 +24,7 @@ jobs:
                 echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
                 echo "DB_NAME=${DB_NAME}" >> .env
 
-                ftp -n -v ftp://ftp.yoroxid.com <<EOF
-                user ${{ secrets.FTP_USER }} ${{ secrets.FTP_PASSWORD }}
+                ftp -n -v ftp://ftp.yoroxid.com && user ${{ secrets.FTP_USER }} ${{ secrets.FTP_PASSWORD }}
                 cd ./www.yoroxid.com/nautilus/
                 put .env
                 bye
