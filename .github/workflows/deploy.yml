@@ -9,25 +9,6 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v4
 
-            - name: FTP Deployer
-              uses: sand4rt/ftp-deployer@v1.8
-              with:
-                sftp: false
-                host: ${{ secrets.FTP_SERVER }}
-                port: 21
-                username: ${{ secrets.FTP_USER }}
-                password: ${{ secrets.FTP_PASSWORD }}
-                remote_folder: "./www.yoroxid.com/nautilus/"
-                local_folder: "./"
-                cleanup: false
-                passive: true
-
-            - name: Setup PHP environment
-              uses: shivammathur/setup-php@v2
-              with:
-                php-version: '8.1'
-                extensions: mysqli
-
             - name: Upload .env file and script via FTP
               env:
                 DB_HOST: ${{ secrets.DB_HOST }}
@@ -44,10 +25,23 @@ jobs:
                 echo "DB_USERNAME=${DB_USERNAME}" >> .env
                 echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
                 echo "DB_NAME=${DB_NAME}" >> .env
-
-                # Upload .env and PHP script to the host
-                lftp -u $FTP_USERNAME,$FTP_PASSWORD $FTP_HOST <<EOF
-                put -O /path/to/wordpress/subfolder/ .env
-                put -O /path/to/wordpress/subfolder/ your-script.php
-                bye
                 EOF
+
+            - name: FTP Deployer
+              uses: sand4rt/ftp-deployer@v1.8
+              with:
+                sftp: false
+                host: ${{ secrets.FTP_SERVER }}
+                port: 21
+                username: ${{ secrets.FTP_USER }}
+                password: ${{ secrets.FTP_PASSWORD }}
+                remote_folder: "./www.yoroxid.com/nautilus/"
+                local_folder: "./"
+                cleanup: false
+                passive: true
+
+            # - name: Setup PHP environment
+            #   uses: shivammathur/setup-php@v2
+            #   with:
+            #     php-version: '8.1'
+            #     extensions: mysqli
