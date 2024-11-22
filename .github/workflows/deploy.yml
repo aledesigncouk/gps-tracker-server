@@ -38,6 +38,6 @@ jobs:
                 remote_folder: ${{ secrets.REMOTE_FOLDER }}
                 local_folder: "./"
                 exclude: '[".github/**",".git/**"]'
-                include: '[".env","api/**","view/**"]'
+                include: '["index.php","style.css",".env","api/**","view/**"]'
                 cleanup: false
                 passive: true

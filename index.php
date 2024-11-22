@@ -1,9 +1,4 @@
 <?php
-// Database connection details
-// $host = '89.46.111.28';
-// $dbname = 'Sql1013105_3';
-// $username = 'Sql1013105';
-// $password = '52857y5o5q';
 
 $env = parse_ini_file(__DIR__ . '/.env');
 
