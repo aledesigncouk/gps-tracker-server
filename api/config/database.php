@@ -1,6 +1,6 @@
 <?php
 
-include "../../config.php";
+include "./config.php";
 
 class Database {
 
@@ -8,6 +8,7 @@ class Database {
 	private $dbuserame;
 	private $dbpwd;
 	private $db;
+	private $conn;
 
 	public function __construct() {
 		global $host, $username, $password, $dbname;
@@ -15,15 +16,32 @@ class Database {
 		$this->dbuser = $username;
 		$this->dbpwd = $password;
 		$this->db = $dbname;
+		$this->conn = null;
 	}
 
 	public function getConnection() {
-		$conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpwd, $this->db);
-		if ($conn->connect_error) {
-			die("Error failed to connect to MySQL: " . $conn->connect_error);
-		} else {
-			echo 'ok';
-			return $conn;
-		}
+		try {
+			$dsn = "mysql:host={$this->dbhost};dbname={$this->db};charset=utf8mb4";
+            $this->conn = new PDO($dsn, $this->dbuser, $this->dbpwd);
+
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            // echo "Connection successful!<br>";
+        } catch (PDOException $e) {
+            die("Error: Failed to connect to the database. " . $e->getMessage());
+        }
+
+        return $this->conn;
+
 	}
+}
+
+// Test the connection
+$database = new Database();
+$conn = $database->getConnection();
+
+if ($conn) {
+    echo "Connection successful!";
+} else {
+    echo "Failed to connect.";
 }
