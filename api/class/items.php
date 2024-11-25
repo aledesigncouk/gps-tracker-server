@@ -24,23 +24,23 @@ class Items {
         return $result;
     }
 
-    public function create() {
+    // public function create() {
 
-        $stmt = $this->conn->prepare("
-            INSERT INTO " . $this->itemsTable . "(`datatime`, `lat`, `lon`)
-            VALUES(?,?,?)");
+    //     $stmt = $this->conn->prepare("
+    //         INSERT INTO " . $this->itemsTable . "(`datatime`, `lat`, `lon`)
+    //         VALUES(?,?,?)");
 
-        $this->datatime = htmlspecialchars(strip_tags($this->datatime));
-        $this->lat = $this->lat; // DB: decimal(8,6)
-        $this->lon = $this->lon; // DB: decimal(9,6)
+    //     $this->datatime = htmlspecialchars(strip_tags($this->datatime));
+    //     $this->lat = $this->lat; // DB: decimal(8,6)
+    //     $this->lon = $this->lon; // DB: decimal(9,6)
 
-        // we are using string due an unresolved issue on adding record with decimal
-        $stmt->bind_param("sss", $this->datatime, $this->lat, $this->lon);
+    //     // we are using string due an unresolved issue on adding record with decimal
+    //     $stmt->bind_param("sss", $this->datatime, $this->lat, $this->lon);
 
-        if ($stmt->execute()) {
-            return true;
-        }
+    //     if ($stmt->execute()) {
+    //         return true;
+    //     }
 
-        return false;
-    }
+    //     return false;
+    // }
 }
