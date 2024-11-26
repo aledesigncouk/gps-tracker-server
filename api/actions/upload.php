@@ -51,9 +51,9 @@ if($conn) {
             echo "Error uploading the file.";
         }
     }
-    else {
-        echo "Failed to connect.";
-    }
+    
+}else {
+    echo "Failed to connect.";
 }
 
 ?>

@@ -1,6 +1,6 @@
 <?php
 
-include "./config.php";
+include "config.php";
 
 class Database {
 
@@ -26,7 +26,7 @@ class Database {
 
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-            
+            // echo "Connection successful!<br>";
         } catch (PDOException $e) {
             die("Error: Failed to connect to the database. " . $e->getMessage());
         }
