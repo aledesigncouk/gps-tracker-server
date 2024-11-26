@@ -26,7 +26,7 @@ class Database {
 
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-            // echo "Connection successful!<br>";
+            
         } catch (PDOException $e) {
             die("Error: Failed to connect to the database. " . $e->getMessage());
         }
@@ -34,14 +34,4 @@ class Database {
         return $this->conn;
 
 	}
-}
-
-// Test the connection
-$database = new Database();
-$conn = $database->getConnection();
-
-if ($conn) {
-    echo "Connection successful!";
-} else {
-    echo "Failed to connect.";
 }

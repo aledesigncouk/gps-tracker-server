@@ -1,12 +1,13 @@
 <?php
 
 include_once '../config/database.php';
-// include_once '../config/config.php';
 
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+// Test the connection
+$database = new Database();
+$conn = $database->getConnection();
 
+if($conn) {
+    echo "Connection successful!";
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (isset($_FILES['csv_file']) && $_FILES['csv_file']['error'] == 0) {
             $fileTmpPath = $_FILES['csv_file']['tmp_name'];
@@ -19,7 +20,7 @@ try {
 
             if (in_array($fileExtension, $allowedExtensions)) {
                 if (($handle = fopen($fileTmpPath, "r")) !== false) {
-                    $stmt = $pdo->prepare("INSERT INTO points (datatime, lat, lon) VALUES (:dt, :lat, :lng)");
+                    $stmt = $conn->prepare("INSERT INTO points (datatime, lat, lon) VALUES (:dt, :lat, :lng)");
 
                     // Read each line of the CSV file
                     while (($data = fgetcsv($handle, 1000, ",")) !== false) {
@@ -50,9 +51,11 @@ try {
             echo "Error uploading the file.";
         }
     }
-} catch (PDOException $e) {
-    echo "Database error: " . $e->getMessage();
+    else {
+        echo "Failed to connect.";
+    }
 }
+
 ?>
 
 <!DOCTYPE html>
