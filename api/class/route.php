@@ -6,7 +6,7 @@ class Route {
 
     public function getRouteByRange(PDO $conn, $dateFrom, $dateTo) {
 
-        $stmt = $this->conn->prepare("SELECT * FROM points WHERE created >=" . $dateFrom . " AND created <" . $dateTo);
+        $stmt = $conn->prepare("SELECT * FROM points WHERE created >=" . $dateFrom . " AND created <" . $dateTo);
         $stmt->bind_param("ss", $dateFrom, $dateTo);
         
         $stmt->execute();
@@ -17,7 +17,7 @@ class Route {
 
     public function getRouteByYear(PDO $conn, $year) {
 
-        $stmt = $this->conn->prepare("SELECT * FROM points WHERE datatime = ". $year);
+        $stmt = $conn->prepare("SELECT * FROM points WHERE datatime = ". $year);
         $stmt->bind_param("i", $year);
 
         $stmt->execute();
