@@ -16,8 +16,7 @@ class Route {
         return $result;
     }
 
-    public function setRoute(PDO $conn, $handle) {
-
+    public function setRoute(PDO $conn, $handle): bool {
 
         $stmt = $conn->prepare("INSERT INTO points (datatime, lat, lon) VALUES (:dt, :lat, :lng)");
    
@@ -35,6 +34,8 @@ class Route {
             $stmt->bindParam(':lng', $lng);
             $stmt->execute();
         }
+
+        return true;
    
     }
 }

@@ -32,12 +32,14 @@ if (($handle = fopen($fileTmpPath, "r")) === false) {
     exit;
 }
 
-$route->setRoute($conn, $handle);
+$success = $route->setRoute($conn, $handle);
 
 fclose($handle);
 $conn = null;   // Explicitly close the connection
 
-renderForm("Data has been successfully imported!");
+if($success) {
+    renderForm("Data has been successfully imported!");
+}
 
 if (empty($_FILES['csv_file']) || $_FILES['csv_file']['error'] !== UPLOAD_ERR_OK) {
     renderForm("Error uploading the file.");
