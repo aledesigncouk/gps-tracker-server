@@ -1,7 +1,9 @@
 <?php
 
 include_once '../config/database.php';
+include_once '../class/route.php';
 
+$route = new Route();
 $database = new Database();
 $conn = $database->getConnection();
 
@@ -30,31 +32,21 @@ if (($handle = fopen($fileTmpPath, "r")) === false) {
     exit;
 }
 
-$stmt = $conn->prepare("INSERT INTO points (datatime, lat, lon) VALUES (:dt, :lat, :lng)");
-
-
-while (($data = fgetcsv($handle, 1000, ",")) !== false) {
-    if (count($data) < 3) {
-        continue; // Skip incomplete rows
-    }
-
-    $dt = date('Y-m-d H:i:s', strtotime($data[0])); // Convert to MySQL DATETIME format
-    $lat = (float)$data[1];
-    $lng = (float)$data[2];
-
-    $stmt->bindParam(':dt', $dt);
-    $stmt->bindParam(':lat', $lat);
-    $stmt->bindParam(':lng', $lng);
-    $stmt->execute();
-}
+$route->setRoute($conn, $handle);
 
 fclose($handle);
+$conn = null;   // Explicitly close the connection
+
 renderForm("Data has been successfully imported!");
 
 if (empty($_FILES['csv_file']) || $_FILES['csv_file']['error'] !== UPLOAD_ERR_OK) {
     renderForm("Error uploading the file.");
     exit;
 }
+
+// check to close connection after the file is uploaded
+// clear form after successful upload
+// more field for other data (may require to add an associated table)
 
 function renderForm($message = '') {
     echo <<<HTML
