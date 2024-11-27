@@ -5,6 +5,7 @@ include_once '../class/route.php';
 
 $route = new Route();
 $database = new Database();
+
 $conn = $database->getConnection();
 
 if(!$conn) {
@@ -32,14 +33,8 @@ if (($handle = fopen($fileTmpPath, "r")) === false) {
     exit;
 }
 
-$success = $route->setRoute($conn, $handle);
-
 fclose($handle);
 $conn = null;   // Explicitly close the connection
-
-if($success) {
-    renderForm("Data has been successfully imported!");
-}
 
 if (empty($_FILES['csv_file']) || $_FILES['csv_file']['error'] !== UPLOAD_ERR_OK) {
     renderForm("Error uploading the file.");

@@ -1,22 +1,32 @@
 <?php
-
+// set dynamic table name
 class Route {
 
     public $points = [];
 
-    public function getRoute($dateFrom, $dateTo) { //from the frontend request
-        if ($this->id) {
-            $stmt = $this->conn->prepare("SELECT * FROM " . $this->itemsTable . " WHERE id = ?"); // select by id
-            $stmt->bind_param("i", $this->id);
-        } else {
-            $stmt = $this->conn->prepare("SELECT * FROM " . $this->itemsTable . " WHERE created >=" . $dateFrom . " AND created <" . $dateTo);
-        }
+    public function getRouteByRange(PDO $conn, $dateFrom, $dateTo) {
+
+        $stmt = $this->conn->prepare("SELECT * FROM points WHERE created >=" . $dateFrom . " AND created <" . $dateTo);
+        $stmt->bind_param("ss", $dateFrom, $dateTo);
+        
         $stmt->execute();
         $result = $stmt->get_result();
+
         return $result;
     }
 
-    public function setRoute(PDO $conn, $handle): bool {
+    public function getRouteByYear(PDO $conn, $year) {
+
+        $stmt = $this->conn->prepare("SELECT * FROM points WHERE datatime = ". $year);
+        $stmt->bind_param("i", $year);
+
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        return $result;
+    }
+
+    public function setRoute(PDO $conn, $handle) {
 
         $stmt = $conn->prepare("INSERT INTO points (datatime, lat, lon) VALUES (:dt, :lat, :lng)");
    
@@ -33,9 +43,6 @@ class Route {
             $stmt->bindParam(':lat', $lat);
             $stmt->bindParam(':lng', $lng);
             $stmt->execute();
-        }
-
-        return true;
-   
+        }   
     }
 }
