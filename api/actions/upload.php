@@ -33,6 +33,8 @@ if (($handle = fopen($fileTmpPath, "r")) === false) {
     exit;
 }
 
+$route->setRoute($conn, $handle);
+
 fclose($handle);
 $conn = null;   // Explicitly close the connection
 
