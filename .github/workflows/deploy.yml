@@ -15,6 +15,7 @@ jobs:
                 DB_USERNAME: ${{ secrets.DB_USERNAME }}
                 DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
                 DB_NAME: ${{ secrets.DB_NAME }}
+                DB_TABLE: ${{ secrets.DB_TABLE }}
 
               run: |
                 # Generate .env file locally
