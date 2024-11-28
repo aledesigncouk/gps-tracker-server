@@ -9,7 +9,7 @@ include_once '../class/route.php';
 
 $providedApiKey = $_SERVER['HTTP_X_API_KEY'] ?? '';
 
-if ($providedApiKey !== API_KEY) {
+if ($providedApiKey !== '1234') {
     http_response_code(403); // Forbidden
     echo json_encode(["message" => "Unauthorized. Invalid API Key."]);
     exit;
