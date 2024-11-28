@@ -16,6 +16,7 @@ jobs:
                 DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
                 DB_NAME: ${{ secrets.DB_NAME }}
                 DB_TABLE: ${{ secrets.DB_TABLE }}
+                API_KEY: ${{ secrets.API_KEY }}
 
               run: |
                 # Generate .env file locally
@@ -24,6 +25,7 @@ jobs:
                 echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
                 echo "DB_NAME=${DB_NAME}" >> .env
                 echo "DB_TABLE=${DB_TABLE}" >> .env
+                echo "API_KEY=${API_KEY}" >> .env
 
             - name: FTP Deployer
               uses: sand4rt/ftp-deployer@v1.8

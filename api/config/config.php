@@ -7,4 +7,5 @@ $dbname = $env['DB_NAME'];
 $username = $env['DB_USERNAME'];
 $password = $env['DB_PASSWORD'];
 $dbtable = $env['DB_TABLE'];
+$apikey = $env['API_KEY'];
 // add the table name/names
