@@ -12,4 +12,4 @@ $db = $database->getConnection();
 
 $track = $route->getRouteByYear($db, 2023);
 
-echo $track;
+echo json_encode($track);
