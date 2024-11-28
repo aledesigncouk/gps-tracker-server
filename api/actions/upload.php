@@ -33,7 +33,7 @@ if (($handle = fopen($fileTmpPath, "r")) === false) {
     exit;
 }
 
-$route->setRoute($conn, $handle);
+$route->setRoute($conn, $database->$dbtable, $handle);
 
 fclose($handle);
 $conn = null;   // Explicitly close the connection

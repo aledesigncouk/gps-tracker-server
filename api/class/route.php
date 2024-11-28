@@ -1,12 +1,10 @@
 <?php
-// set dynamic table name
+
 class Route {
 
-    public $points = [];
+    public function getRouteByRange(PDO $conn, $dbtable, $dateFrom, $dateTo) {
 
-    public function getRouteByRange(PDO $conn, $dateFrom, $dateTo) {
-
-        $stmt = $conn->prepare("SELECT * FROM points WHERE created >= dateFrom AND created < dateTo");
+        $stmt = $conn->prepare("SELECT * FROM $dbtable WHERE created >= dateFrom AND created < dateTo");
         $stmt->bindValue(":dateFrom", $dateFrom);
         $stmt->bindValue(":dateTo", $$dateTo);
         
@@ -16,9 +14,9 @@ class Route {
         return $result;
     }
 
-    public function getRouteByYear(PDO $conn, $year) {
+    public function getRouteByYear(PDO $conn, $dbtable, $year) {
 
-        $stmt = $conn->prepare("SELECT * FROM points WHERE YEAR(datatime) = :year");
+        $stmt = $conn->prepare("SELECT * FROM $dbtable WHERE YEAR(datatime) = :year");
         $stmt->bindValue(":year", $year); // PDO::PARAM_INT
 
         $stmt->execute();

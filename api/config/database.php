@@ -1,6 +1,6 @@
 <?php
 
-include "config.php";
+include_once "config.php";
 
 class Database {
 
@@ -8,6 +8,7 @@ class Database {
 	private $dbuserame;
 	private $dbpwd;
 	private $db;
+	private $dbtable;
 	private $conn;
 
 	public function __construct() {
@@ -16,6 +17,7 @@ class Database {
 		$this->dbuser = $username;
 		$this->dbpwd = $password;
 		$this->db = $dbname;
+		$this->dbtable = $dbtable;
 		$this->conn = null;
 	}
 
@@ -26,7 +28,7 @@ class Database {
 
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-            // echo "Connection successful!<br>";
+           
         } catch (PDOException $e) {
             die("Error: Failed to connect to the database. " . $e->getMessage());
         }
