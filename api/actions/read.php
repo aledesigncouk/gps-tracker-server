@@ -4,13 +4,14 @@ header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-API-KEY");
 
-include_once '../config/database.php';
-include_once '../config/config.php';
+include_once '../../config/config.php';
+include_once '../../config/api.php';
+include_once '../class/database.php';
 include_once '../class/route.php';
 
 $providedApiKey = $_SERVER['HTTP_X_API_KEY'] ?? '';
 
-if ($providedApiKey !== $apiKey) {
+if ($providedApiKey !== $apikey) {
     http_response_code(403); // Forbidden
     echo json_encode(["message" => "Unauthorized. Invalid API Key."]);
     exit;
@@ -20,7 +21,7 @@ $database = new Database();
 $route = new Route();
 
 $db = $database->getConnection();
-$dbtable = $database->getTable();
+$dbtable = $database->getTableName();
 
 $method = $_SERVER['REQUEST_METHOD'];
 $request = explode('/', trim($_SERVER['PATH_INFO'], '/'));
@@ -45,6 +46,6 @@ if ($method === 'GET') {
     echo json_encode(["message" => "Unsupported request method."]);
 }
 
-function setRequest() {}
+function setRequestByYear() {}
 
-// curl -X GET https://www.yoroxid.com/nautilus/api/actions/read.php?year=2023
+function setRequestByRange() {}

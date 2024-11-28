@@ -1,6 +1,6 @@
 <?php
 
-include_once '../config/database.php';
+include_once '../class/database.php';
 include_once '../class/route.php';
 
 $route = new Route();
@@ -27,18 +27,17 @@ if (!in_array($fileExtension, $allowedExtensions)) {
     exit;
 }
 
-// Process CSV file
 if (($handle = fopen($fileTmpPath, "r")) === false) {
     renderForm("Error opening the file.");
     exit;
 }
 
-$dbtable = $database->getTable();
+$dbtable = $database->getTableName();
 
 $route->setRoute($conn, $dbtable, $handle);
 
 fclose($handle);
-$conn = null;   // Explicitly close the connection
+$conn = null;
 
 if (empty($_FILES['csv_file']) || $_FILES['csv_file']['error'] !== UPLOAD_ERR_OK) {
     renderForm("Error uploading the file.");

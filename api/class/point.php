@@ -12,7 +12,7 @@ class Point {
     public function __construct($datatime, $lat, $lon) {
         $this->datatime = $datatime;
         $this->lat = $lat;
-        $this->long = $lon;
+        $this->lon = $lon;
     }
 
     // get point with datatime, lat, lon

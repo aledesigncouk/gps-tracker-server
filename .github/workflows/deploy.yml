@@ -19,12 +19,11 @@ jobs:
                 API_KEY: ${{ secrets.API_KEY }}
 
               run: |
-                # Generate .env file locally
                 echo "DB_HOST=${DB_HOST}" > .env
                 echo "DB_USERNAME=${DB_USERNAME}" >> .env
                 echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
                 echo "DB_NAME=${DB_NAME}" >> .env
-                echo "DB_TABLE=${DB_TABLE}" >> .env
+                echo "DB_TABLE_NAME=${DB_TABLE_NAME}" >> .env
                 echo "API_KEY=${API_KEY}" >> .env
 
             - name: FTP Deployer
@@ -38,6 +37,6 @@ jobs:
                 remote_folder: ${{ secrets.REMOTE_FOLDER }}
                 local_folder: "./"
                 exclude: '[".github/**",".git/**"]'
-                include: '["index.html",".env","api/**"]'
+                include: '["index.html",".env","api/**", "config/**"]'
                 cleanup: false
                 passive: true
