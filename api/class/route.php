@@ -22,7 +22,7 @@ class Route {
         $stmt->bindValue(":year", $year); // PDO::PARAM_INT
 
         $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC); // check to use loop
 
         return $result;
     }
