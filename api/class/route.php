@@ -18,7 +18,7 @@ class Route {
 
     public function getRouteByYear(PDO $conn, $year) {
 
-        $stmt = $conn->prepare("SELECT * FROM points WHERE (YEAR)datatime = :year");
+        $stmt = $conn->prepare("SELECT * FROM points WHERE YEAR(datatime) = :year");
         $stmt->bindValue(":year", $year); // PDO::PARAM_INT
 
         $stmt->execute();
