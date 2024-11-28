@@ -5,12 +5,12 @@ header("Access-Control-Allow-Methods: GET");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-API-KEY");
 
 include_once '../config/database.php';
+include_once '../config/config.php';
 include_once '../class/route.php';
 
 $providedApiKey = $_SERVER['HTTP_X_API_KEY'] ?? '';
-$validApiKey = getenv('API_KEY') ?: 'default_value';
 
-if ($providedApiKey !== $validApiKey) {
+if ($providedApiKey !== $apiKey) {
     http_response_code(403); // Forbidden
     echo json_encode(["message" => "Unauthorized. Invalid API Key."]);
     exit;
