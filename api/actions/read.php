@@ -8,37 +8,43 @@ include_once '../config/database.php';
 include_once '../class/route.php';
 
 $providedApiKey = $_SERVER['HTTP_X_API_KEY'] ?? '';
+$validApiKey = getenv('API_KEY') ?: 'default_value';
 
-if ($providedApiKey !== '1234') {
+if ($providedApiKey !== $validApiKey) {
     http_response_code(403); // Forbidden
     echo json_encode(["message" => "Unauthorized. Invalid API Key."]);
     exit;
-}else{
-    echo 'key accepted';
+}
 
-    $database = new Database();
+$database = new Database();
 $route = new Route();
 
 $db = $database->getConnection();
 $dbtable = $database->getTable();
 
 $method = $_SERVER['REQUEST_METHOD'];
-
 $request = explode('/', trim($_SERVER['PATH_INFO'], '/'));
-$resource = array_shift($request); // e.g., 'users', 'posts', etc.
+$year = $_GET['year'] ?? null;
 
-// curl -X GET https://www.yoroxid.com/nautilus/api/actions/read.php/2023
-switch ($method) {
-    case 'GET':
-        if($resource) {
-            $track = $route->getRouteByYear($db, $dbtable, $resource);
-        
-            echo json_encode($track);
-        }
-        break;
+if ($method === 'GET') {
+    if (!$year || !is_numeric($year)) {
+        http_response_code(400);
+        echo json_encode(["message" => "Invalid or missing 'year' parameter."]);
+        exit;
+    }
+
+    $track = $route->getRouteByYear($db, $dbtable, $year);
+    if ($track) {
+        echo json_encode($track);
+    } else {
+        http_response_code(400);
+        echo json_encode(["message" => "No data found for the specified year."]);
+    }
+} else {
+    http_response_code(405); // Method Not Allowed
+    echo json_encode(["message" => "Unsupported request method."]);
 }
-}
 
+function setRequest() {}
 
-
-
+// curl -X GET https://www.yoroxid.com/nautilus/api/actions/read.php?year=2023
