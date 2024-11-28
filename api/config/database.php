@@ -12,7 +12,7 @@ class Database {
 	private $conn;
 
 	public function __construct() {
-		global $host, $username, $password, $dbname;
+		global $host, $username, $password, $dbname, $dbtable;
 		$this->dbhost = $host;
 		$this->dbuser = $username;
 		$this->dbpwd = $password;
