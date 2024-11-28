@@ -36,4 +36,8 @@ class Database {
         return $this->conn;
 
 	}
+
+	public function getTable() {
+		return $this->dbtable;
+	}
 }

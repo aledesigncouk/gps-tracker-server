@@ -4,7 +4,7 @@ class Route {
 
     public function getRouteByRange(PDO $conn, $dbtable, $dateFrom, $dateTo) {
 
-        $stmt = $conn->prepare("SELECT * FROM $dbtable WHERE created >= dateFrom AND created < dateTo");
+        $stmt = $conn->prepare("SELECT * FROM `" .$dbtable. "` WHERE created >= dateFrom AND created < dateTo");
         $stmt->bindValue(":dateFrom", $dateFrom);
         $stmt->bindValue(":dateTo", $$dateTo);
         
@@ -16,7 +16,7 @@ class Route {
 
     public function getRouteByYear(PDO $conn, $dbtable, $year) {
 
-        $stmt = $conn->prepare("SELECT * FROM $dbtable WHERE YEAR(datatime) = :year");
+        $stmt = $conn->prepare("SELECT * FROM `" .$dbtable. "` WHERE YEAR(datatime) = :year");
         $stmt->bindValue(":year", $year); // PDO::PARAM_INT
 
         $stmt->execute();
@@ -25,9 +25,9 @@ class Route {
         return $result;
     }
 
-    public function setRoute(PDO $conn, $handle) {
+    public function setRoute(PDO $conn, $dbtable, $handle) {
 
-        $stmt = $conn->prepare("INSERT INTO points (datatime, lat, lon) VALUES (:dt, :lat, :lng)");
+        $stmt = $conn->prepare("INSERT INTO `" .$dbtable. "` (datatime, lat, lon) VALUES (:dt, :lat, :lng)");
    
         while (($data = fgetcsv($handle, 1000, ",")) !== false) {
             if (count($data) < 3) {
