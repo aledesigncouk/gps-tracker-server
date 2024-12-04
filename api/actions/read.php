@@ -33,7 +33,7 @@ $db = $database->getConnection();
 $dbtable = $database->getTableName();
 
 $method = $_SERVER['REQUEST_METHOD'];
-$request = explode('/', trim($_SERVER['PATH_INFO'], '/'));
+
 $year = $_GET['year'] ?? null;
 
 if ($method === 'GET') {
