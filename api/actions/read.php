@@ -11,14 +11,14 @@ include_once '../class/route.php';
 
 $providedApiKey = $_SERVER['HTTP_X_API_KEY'] ?? '';
 
-/* if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     header("Access-Control-Allow-Origin: *");
     header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type, Authorization, X-API-KEY");
     header("Access-Control-Max-Age: 86400"); // Cache preflight for 24 hours
     http_response_code(204);
     exit;
-} */
+}
 
 if ($providedApiKey !== $apikey) {
     http_response_code(403); // Forbidden
@@ -43,9 +43,12 @@ if ($method === 'GET') {
         exit;
     }
 
-    $track = $route->getRouteByYear($db, $dbtable, $year);
-    if ($track) {
-        echo json_encode($track);
+    $points = $route->getRouteByYear($db, $dbtable, $year);
+
+    if ($points) {
+
+        echo toGeoJson($points, $year);
+
     } else {
         http_response_code(400);
         echo json_encode(["message" => "No data found for the specified year."]);
@@ -58,3 +61,28 @@ if ($method === 'GET') {
 function setRequestByYear() {}
 
 function setRequestByRange() {}
+
+function toGeoJson($points, $year) {
+    usort($points, function ($a, $b) {
+        return strtotime($a['datatime']) - strtotime($b['datatime']);
+    });
+
+    $coordinates = array_map(function ($item) {
+        return [floatval($item['lat']), floatval($item['lon'])];
+    }, $points);
+
+    $geoJson = [
+        'type' => 'Feature',
+        'properties' => [
+            'year' => $year
+        ],
+        'geometry' => [
+            'coordinates' => $coordinates,
+            'type' => 'LineString'
+        ]
+    ];
+
+    $outputJson = json_encode($geoJson, JSON_PRETTY_PRINT);
+
+    echo $outputJson;
+}
