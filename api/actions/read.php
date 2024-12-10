@@ -35,16 +35,15 @@ $dbtable = $database->getTableName();
 $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'GET') {
-
     // missing all parameters => error
-    if (!isset($GET['start']) && !isset($GET['end'])) {
+    if (!isset($_GET['start']) && !isset($_GET['end'])) {
         http_response_code(400);
         echo json_encode(["message" => "Missing 'start' and 'end' parameter."]);
         exit;
     }
 
     // missing end parameter => get by year
-    if (!isset($GET['end']) && isset($GET['start'])) {
+    if (!isset($_GET['end']) && isset($_GET['start'])) {
         $year = $_GET['start'] ?? null;
 
         if (!$year || !is_numeric($year)) {
@@ -65,7 +64,7 @@ if ($method === 'GET') {
     }
 
     // start and end provided => get by range
-    if (isset($GET['start']) && isset($GET['end'])) {
+    if (isset($_GET['start']) && isset($_GET['end'])) {
 
         $year = $start =$_GET['start'] ?? null;
         $end = $_GET['end'] ?? null;
