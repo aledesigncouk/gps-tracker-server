@@ -34,33 +34,65 @@ $dbtable = $database->getTableName();
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-$year = $_GET['year'] ?? null;
-
 if ($method === 'GET') {
-    if (!$year || !is_numeric($year)) {
+
+    // missing all parameters => error
+    if (!isset($GET['start']) && !isset($GET['end'])) {
         http_response_code(400);
-        echo json_encode(["message" => "Invalid or missing 'year' parameter."]);
+        echo json_encode(["message" => "Missing 'start' and 'end' parameter."]);
         exit;
     }
 
-    $points = $route->getRouteByYear($db, $dbtable, $year);
+    // missing end parameter => get by year
+    if (!isset($GET['end']) && isset($GET['start'])) {
+        $year = $_GET['start'] ?? null;
 
-    if ($points) {
-
-        echo toGeoJson($points, $year);
-
-    } else {
-        http_response_code(400);
-        echo json_encode(["message" => "No data found for the specified year."]);
+        if (!$year || !is_numeric($year)) {
+            http_response_code(400);
+            echo json_encode(["message" => "Invalid or missing 'year' parameter."]);
+            exit;
+        }
+    
+        $points = $route->getRouteByYear($db, $dbtable, $year);
+    
+        if ($points) {
+    
+            echo toGeoJson($points, $year);
+        } else {
+            http_response_code(400);
+            echo json_encode(["message" => "No data found for the specified year."]);
+        }
     }
+
+    // start and end provided => get by range
+    if (isset($GET['start']) && isset($GET['end'])) {
+
+        $year = $start =$_GET['start'] ?? null;
+        $end = $_GET['end'] ?? null;
+
+        if (!$start || !is_numeric($start) || !$end || !is_numeric($end)) {
+            http_response_code(400);
+            echo json_encode(["message" => "Invalid or missing 'start' or 'end' parameter."]);
+            exit;
+        }
+    
+        $points = $route->getRouteByRange($db, $dbtable, $start, $end);
+    
+        if ($points) {
+    
+            echo toGeoJson($points, $year); // check about range
+        } else {
+            http_response_code(400);
+            echo json_encode(["message" => "No data found for the specified range."]);
+        }
+        
+    }
+
 } else {
     http_response_code(405); // Method Not Allowed
     echo json_encode(["message" => "Unsupported request method."]);
 }
 
-function setRequestByYear() {}
-
-function setRequestByRange() {}
 
 function toGeoJson($points, $year) {
     usort($points, function ($a, $b) {

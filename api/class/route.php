@@ -2,18 +2,6 @@
 
 class Route {
 
-    // public function getRouteByRange(PDO $conn, $dbtable, $dateFrom, $dateTo) {
-
-    //     $stmt = $conn->prepare("SELECT * FROM `" .$dbtable. "` WHERE created >= dateFrom AND created < dateTo");
-    //     $stmt->bindValue(":dateFrom", $dateFrom);
-    //     $stmt->bindValue(":dateTo", $$dateTo);
-        
-    //     $stmt->execute();
-    //     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    //     return $result;
-    // }
-
     public function getRouteByYear(PDO $conn, $dbtable, $year) {
 
         $stmt = $conn->prepare("SELECT * FROM `" .$dbtable. "` WHERE YEAR(datatime) = :year");
@@ -21,6 +9,18 @@ class Route {
 
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC); // check to use loop
+
+        return $result;
+    }
+
+    public function getRouteByRange(PDO $conn, $dbtable, $dateFrom, $dateTo) {
+
+        $stmt = $conn->prepare("SELECT * FROM `" .$dbtable. "` WHERE datatime >= :dateFrom AND datatime < :dateTo");
+        $stmt->bindValue(":dateFrom", $dateFrom);
+        $stmt->bindValue(":dateTo", $$dateTo);
+        
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return $result;
     }
