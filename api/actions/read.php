@@ -12,7 +12,6 @@ include_once '../class/route.php';
 $providedApiKey = $_SERVER['HTTP_X_API_KEY'] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    header("Access-Control-Allow-Origin: *");
     header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type, Authorization, X-API-KEY");
     header("Access-Control-Max-Age: 86400"); // Cache preflight for 24 hours
@@ -46,7 +45,7 @@ if ($method === 'GET') {
     if (!isset($_GET['end']) && isset($_GET['start'])) {
         $year = $_GET['start'] ?? null;
 
-        if (!$year || !is_numeric($year)) {
+        if (!$year || !is_numeric($year)) { // int required
             http_response_code(400);
             echo json_encode(["message" => "Invalid or missing 'year' parameter."]);
             exit;
@@ -55,7 +54,6 @@ if ($method === 'GET') {
         $points = $route->getRouteByYear($db, $dbtable, $year);
     
         if ($points) {
-    
             echo toGeoJson($points, $year);
         } else {
             http_response_code(400);
@@ -66,10 +64,10 @@ if ($method === 'GET') {
     // start and end provided => get by range
     if (isset($_GET['start']) && isset($_GET['end'])) {
 
-        $year = $start =$_GET['start'] ?? null;
+        $start = $_GET['start'] ?? null;
         $end = $_GET['end'] ?? null;
 
-        if (!$start || !is_numeric($start) || !$end || !is_numeric($end)) {
+        if (empty($start) || empty($end) || !is_string($start) || !is_string($end)) {
             http_response_code(400);
             echo json_encode(["message" => "Invalid or missing 'start' or 'end' parameter."]);
             exit;
@@ -78,8 +76,7 @@ if ($method === 'GET') {
         $points = $route->getRouteByRange($db, $dbtable, $start, $end);
     
         if ($points) {
-    
-            echo toGeoJson($points, $year); // check about range
+            echo toGeoJson($points, 0000); // check about range
         } else {
             http_response_code(400);
             echo json_encode(["message" => "No data found for the specified range."]);
