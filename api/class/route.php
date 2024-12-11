@@ -13,11 +13,14 @@ class Route {
         return $result;
     }
 
-    public function getRouteByRange(PDO $conn, $dbtable, $dateFrom, $dateTo) {
+    public function getRouteByRange(PDO $conn, $dbtable, $start, $end) {
+
+        $dateFrom = DateTime::createFromFormat('Y-d-m', $start)->format('Y-m-d');
+        $dateTo = DateTime::createFromFormat('Y-d-m', $end)->format('Y-m-d');
 
         $stmt = $conn->prepare("SELECT * FROM `" .$dbtable. "` WHERE datatime >= :dateFrom AND datatime < :dateTo");
         $stmt->bindValue(":dateFrom", $dateFrom);
-        $stmt->bindValue(":dateTo", $$dateTo);
+        $stmt->bindValue(":dateTo", $dateTo);
         
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -41,6 +41,12 @@ if ($method === 'GET') {
         exit;
     }
 
+    if (!isset($_GET['start']) && isset($_GET['end'])) {
+        http_response_code(400);
+        echo json_encode(["message" => "Missing 'start' parameter."]);
+        exit;
+    }
+
     // missing end parameter => get by year
     if (!isset($_GET['end']) && isset($_GET['start'])) {
         $year = $_GET['start'] ?? null;
