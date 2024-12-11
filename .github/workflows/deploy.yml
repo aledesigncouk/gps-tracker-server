@@ -36,7 +36,7 @@ jobs:
                 password: ${{ secrets.FTP_PASSWORD }}
                 remote_folder: ${{ secrets.REMOTE_FOLDER }}
                 local_folder: "./"
-                exclude: '[".github/**",".git/**"]'
+                exclude: '[".github/**",".git/**", "composer.json", "composer.lock"]'
                 include: '["index.html",".env","api/**", "config/**"]'
                 cleanup: false
                 passive: true
