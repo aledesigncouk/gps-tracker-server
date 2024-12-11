@@ -113,7 +113,7 @@ function toGeoJson($points, $year) {
         ]
     ];
 
-    $outputJson = json_encode($geoJson, JSON_PRETTY_PRINT);
+    $outputJson = json_encode($geoJson);
 
     echo $outputJson;
 }
