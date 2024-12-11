@@ -1,3 +1,5 @@
 notes/
+composer.phar
+/vendor/ 
 .env
 .htaccess
