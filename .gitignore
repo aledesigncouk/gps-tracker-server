@@ -1,5 +1,15 @@
-notes/
-composer.phar
-/vendor/ 
+# Env
 .env
 .htaccess
+
+# Composer
+composer.phar
+/vendor/
+
+# Eclipse
+.settings/
+.buildpath
+.project
+
+# misc
+notes/

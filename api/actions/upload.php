@@ -50,7 +50,6 @@ if (empty($_FILES['csv_file']) || $_FILES['csv_file']['error'] !== UPLOAD_ERR_OK
 
 function renderForm($message = '') {
     echo <<<HTML
-
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -66,7 +65,6 @@ function renderForm($message = '') {
             </form>
         </body>
         </html>
-
     HTML;
 }
 
