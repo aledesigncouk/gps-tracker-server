@@ -6,8 +6,8 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization, X-API-KEY");
 
 include_once '../../config/config.php';
 include_once '../../config/api.php';
-include_once '../class/database.php';
-include_once '../class/route.php';
+include_once '../classes/database.php';
+include_once '../classes/route.php';
 
 $providedApiKey = $_SERVER['HTTP_X_API_KEY'] ?? '';
 

@@ -1,7 +1,7 @@
 <?php
 
-include_once '../class/database.php';
-include_once '../class/route.php';
+include_once '../classes/database.php';
+include_once '../classes/route.php';
 
 $route = new Route();
 $database = new Database();
