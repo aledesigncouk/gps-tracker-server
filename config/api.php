@@ -2,4 +2,4 @@
 
 $env = parse_ini_file(__DIR__ . '/../.env');
 
-$apikey = $env['API_KEY'];
+$apiKey = $env['API_KEY'];
