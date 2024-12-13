@@ -78,7 +78,7 @@ class ReadRouteAPI {
 
             $start = $_GET['start'] ?? null;
             $end = $_GET['end'] ?? null;
-            $year = $_GET['year'] ?? null; 
+            $year = $_GET['year'] ?? null;
 
             switch (true) {
                 case !$start && !$end && !$year:
@@ -132,7 +132,7 @@ class ReadRouteAPI {
                         return;
                     }
 
-                    if($year !== 1) {
+                    if ($year != 1) {
                         http_response_code(400);
                         echo json_encode(["message" => "Invalid year parameter request."]);
                         return;
@@ -149,7 +149,7 @@ class ReadRouteAPI {
                     }
 
                     return;
-                    
+
                 default:
                     http_response_code(400);
                     echo json_encode(["message" => "Invalid request parameters."]);
