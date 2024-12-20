@@ -78,20 +78,19 @@ class ReadRouteAPI {
 
             $start = $_GET['start'] ?? null;
             $end = $_GET['end'] ?? null;
-            $year = $_GET['year'] ?? null;
 
             switch (true) {
-                case !$start && !$end && !$year:
+                case !$start && !$end:
                     http_response_code(400);
                     echo json_encode(["message" => "Missing 'start' and 'end' parameter."]);
                     return;
 
-                case !$start && !$year && $end:
+                case !$start && $end:
                     http_response_code(400);
                     echo json_encode(["message" => "Missing 'start' parameter."]);
                     return;
 
-                case !$end && !$year &&  $start:
+                case !$end && $start:
                     if (!is_numeric($start)) {
                         http_response_code(400);
                         echo json_encode(["message" => "Invalid or missing 'year' parameter."]);
@@ -108,7 +107,7 @@ class ReadRouteAPI {
                     }
                     return;
 
-                case $start && $end && !$year:
+                case $start && $end:
                     if (empty($start) || empty($end) || !is_string($start) || !is_string($end)) {
                         http_response_code(400);
                         echo json_encode(["message" => "Invalid or missing 'start' or 'end' parameter."]);
@@ -123,31 +122,6 @@ class ReadRouteAPI {
                         http_response_code(400);
                         echo json_encode(["message" => "No data found for the specified range."]);
                     }
-                    return;
-
-                case $year && !$start && !$end:
-                    if (!is_numeric($year)) {
-                        http_response_code(400);
-                        echo json_encode(["message" => "Invalid or missing 'year' parameter."]);
-                        return;
-                    }
-
-                    if ($year != 1) {
-                        http_response_code(400);
-                        echo json_encode(["message" => "Invalid year parameter request."]);
-                        return;
-                    }
-
-                    $years = json_encode($this->route->getYears($this->db, $this->dbTable));
-
-                    if ($years) {
-                        echo $years;
-                    } else {
-                        http_response_code(400);
-                        echo json_encode(["message" => "No data found for years."]);
-                        return;
-                    }
-
                     return;
 
                 default:

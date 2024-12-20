@@ -53,9 +53,11 @@ class Route {
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        return $result;
+        $years = array_map(function($row) {
+            return $row['year'];
+        }, $result);
+
+        return $years;
     }
-
-
 
 }
