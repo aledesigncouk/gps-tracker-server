@@ -37,7 +37,8 @@ class Route {
                 continue; // Skip incomplete rows
             }
         
-            $dt = date('Y-m-d H:i:s', strtotime($data[0]));
+            $datetime = DateTime::createFromFormat('d/m/Y H:i:s', $data[0]);
+            $dt = $datetime ? $datetime->format('Y-d-m H:i:s') : null;
             $lat = (float)$data[1];
             $lng = (float)$data[2];
         
