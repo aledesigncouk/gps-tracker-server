@@ -38,7 +38,7 @@ class Route {
             }
         
             $datetime = DateTime::createFromFormat('d/m/Y H:i:s', $data[0]);
-            $dt = $datetime ? $datetime->format('Y-d-m H:i:s') : null;
+            $dt = $datetime ? $datetime->format('Y-d-m H:i:s') : null; // datetime cannot be null! improve this
             $lat = (float)$data[1];
             $lng = (float)$data[2];
         
