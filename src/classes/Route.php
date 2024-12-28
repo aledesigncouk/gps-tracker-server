@@ -1,5 +1,7 @@
 <?php
 
+namespace Alex\GpsTrackerServer\classes;
+
 class Route {
 
     public function getRouteByYear(PDO $conn, $dbtable, $year) {

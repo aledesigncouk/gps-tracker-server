@@ -1,6 +1,8 @@
 <?php
 
-class ReadRouteAPI {
+namespace Alex\GpsTrackerServer\actions;
+
+class ReadYearsAPI {
     private $db;
     private $dbTable;
     private $route;

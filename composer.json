@@ -1,14 +1,11 @@
 {
     "name": "alex/gps-tracker-server",
-    "require": {
-        "phpunit/phpunit": "^11.5"
-    },
     "require-dev": {
         "phpunit/phpunit": "^11.5"
     },
     "autoload": {
         "psr-4": {
-            "Alex\\GpsTrackerServer\\": "./"
+            "Alex\\GpsTrackerServer\\": "src/"
         }
     },
     "authors": [

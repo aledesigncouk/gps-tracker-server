@@ -1,7 +1,9 @@
 <?php
 
-include_once '../classes/database.php';
-include_once '../classes/route.php';
+namespace Alex\GpsTrackerServer\actions;
+
+use Alex\GpsTrackerServer\classes\Database;
+use Alex\GpsTrackerServer\classes\Route;
 
 $route = new Route();
 $database = new Database();

@@ -1,5 +1,7 @@
 <?php
 
+namespace Alex\GpsTrackerServer\config;
+
 $env = parse_ini_file(__DIR__ . '/../.env');
 
 $dbHost = $env['DB_HOST'];
