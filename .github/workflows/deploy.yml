@@ -9,7 +9,7 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v4
 
-            - name: Generated .env file
+            - name: Generate .env file
               env:
                 DB_HOST: ${{ secrets.DB_HOST }}
                 DB_USERNAME: ${{ secrets.DB_USERNAME }}
@@ -36,7 +36,7 @@ jobs:
                 password: ${{ secrets.FTP_PASSWORD }}
                 remote_folder: ${{ secrets.REMOTE_FOLDER }}
                 local_folder: "./"
-                exclude: '[".github/**",".git/**", "composer.json", "composer.lock"]'
-                include: '["index.html",".env","api/**", "config/**"]'
+                exclude: '[".github/**",".git/**", "composer.json", "composer.lock", "src/test/**"]'
+                include: '["index.html","src/actions/**","src/classes/**"]'
                 cleanup: false
                 passive: true
