@@ -2,12 +2,15 @@
 
 namespace Alex\GpsTrackerServer\classes;
 
+use PDO;
+use DateTime;
+
 class Route {
 
     public function getRouteByYear(PDO $conn, $dbtable, $year) {
 
         $stmt = $conn->prepare("SELECT * FROM `" .$dbtable. "` WHERE YEAR(datatime) = :year");
-        $stmt->bindValue(":year", $year); // to check the best data format for the database
+        $stmt->bindValue(":year", $year, PDO::PARAM_INT); // to check the best data format for the database
 
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC); // check to use loop
@@ -17,12 +20,9 @@ class Route {
 
     public function getRouteByRange(PDO $conn, $dbtable, $start, $end) {
 
-        $dateFrom = DateTime::createFromFormat('Y-d-m', $start)->format('Y-m-d');
-        $dateTo = DateTime::createFromFormat('Y-d-m', $end)->format('Y-m-d');
-
         $stmt = $conn->prepare("SELECT * FROM `" .$dbtable. "` WHERE datatime >= :dateFrom AND datatime < :dateTo");
-        $stmt->bindValue(":dateFrom", $dateFrom);
-        $stmt->bindValue(":dateTo", $dateTo);
+        $stmt->bindValue(":dateFrom", $start);
+        $stmt->bindValue(":dateTo", $end);
         
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
