@@ -1,0 +1,58 @@
+name: Run PHPUnit Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test_db
+          MYSQL_USER: test_user
+          MYSQL_PASSWORD: test_password
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+
+      - name: Install Composer Dependencies
+        run: composer install
+
+      - name: Run Database Migration
+        run: |
+          mysql -h 127.0.0.1 -u test_user -ptest_password -e "
+          CREATE TABLE test_table (
+              id INT AUTO_INCREMENT PRIMARY KEY,
+              datatime DATETIME NOT NULL,
+              lat FLOAT NOT NULL,
+              lon FLOAT NOT NULL
+          ); 
+          INSERT INTO test_table (datatime, lat, lon) VALUES
+          ('2023-03-01 00:00:00', 11.123, 21.456),
+          ('2024-01-06 03:22:19', 10.123, 20.456),
+          ('2024-02-15 12:00:00', 11.123, 21.456),
+          ('2025-04-11 00:00:00', 10.123, 20.456);
+          "
+
+      - name: Run PHPUnit Tests
+        run: vendor/bin/phpunit
