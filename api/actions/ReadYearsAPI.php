@@ -70,10 +70,10 @@ class ReadYearsAPI {
     }
 }
 
-include_once '../../config/config.php';
-include_once '../../config/api.php';
-include_once '../classes/database.php';
-include_once '../classes/route.php';
+include_once '../../config/Config.php';
+include_once '../../config/Api.php';
+include_once '../classes/Database.php';
+include_once '../classes/Route.php';
 
 $database = new Database();
 $route = new Route();
