@@ -9,6 +9,7 @@ use Alex\GpsTrackerServer\config\Config;
 
 $database = new Database();
 $route = new Route();
+$apiKey = Config::get('API_KEY');
 
 class ReadYearsAPI
 {
