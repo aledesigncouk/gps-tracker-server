@@ -7,7 +7,7 @@
     </testsuites>
     <coverage>
         <include>
-            <directory>src</directory>
+            <directory>api</directory>
         </include>
     </coverage>
 </phpunit>
