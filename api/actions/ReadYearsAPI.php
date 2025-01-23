@@ -1,18 +1,9 @@
 <?php
 
-// namespace Alex\GpsTrackerServer\actions;
+namespace Alex\GpsTrackerServer\actions;
 
-// use Alex\GpsTrackerServer\classes\Database;
-// use Alex\GpsTrackerServer\classes\Route;
-if (function_exists('opcache_reset')) {
-    opcache_reset();
-}
-
-
-include_once '/../config/Config.php';
-include_once '/../config/Api.php';
-include_once '/../classes/Database.php';
-include_once '/../classes/Route.php';
+use Alex\GpsTrackerServer\classes\Database;
+use Alex\GpsTrackerServer\classes\Route;
 
 $database = new Database();
 $route = new Route();
