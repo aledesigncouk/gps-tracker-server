@@ -1,6 +1,11 @@
 <?php
 
-namespace Alex\GpsTrackerServer\classes;
+// namespace Alex\GpsTrackerServer\classes;
+
+include_once '/../../config/Config.php';
+include_once '/../../config/Api.php';
+include_once '/../classes/Database.php';
+include_once '/../classes/Route.php';
 
 use PDO;
 use PDOException;
