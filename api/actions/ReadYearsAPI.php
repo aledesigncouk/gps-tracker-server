@@ -7,10 +7,6 @@ use Alex\GpsTrackerServer\classes\Database;
 use Alex\GpsTrackerServer\classes\Route;
 use Alex\GpsTrackerServer\config\Config;
 
-$database = new Database();
-$route = new Route();
-$apiKey = Config::get('API_KEY');
-
 class ReadYearsAPI
 {
     private $db;
@@ -84,6 +80,10 @@ class ReadYearsAPI
         echo json_encode(["message" => "Unsupported request method."]);
     }
 }
+
+$database = new Database();
+$route = new Route();
+$apiKey = Config::get('API_KEY');
 
 $routeYears = new ReadYearsApi($database, $route, $apiKey);
 $routeYears->handleGetRequest();

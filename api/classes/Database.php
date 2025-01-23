@@ -8,7 +8,6 @@ use Alex\GpsTrackerServer\config\Config;
 
 class Database
 {
-
 	private $dbHost;
 	private $dbUser;
 	private $dbPwd;
