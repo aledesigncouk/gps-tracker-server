@@ -2,13 +2,21 @@
 
 namespace Alex\GpsTrackerServer\actions;
 
-class ReadYearsAPI {
+use Alex\GpsTrackerServer\classes\Database;
+use Alex\GpsTrackerServer\classes\Route;
+
+$database = new Database();
+$route = new Route();
+
+class ReadYearsAPI
+{
     private $db;
     private $dbTable;
     private $route;
     private $apiKey;
 
-    public function __construct($database, $route, $apiKey) {
+    public function __construct($database, $route, $apiKey)
+    {
         $this->db = $database->getConnection();
         $this->dbTable = $database->getTableName();
         $this->route = $route;
@@ -17,14 +25,16 @@ class ReadYearsAPI {
         $this->setHeaders();
     }
 
-    private function setHeaders() {
+    private function setHeaders()
+    {
         header("Access-Control-Allow-Origin: *");
         header("Content-Type: application/json; charset=UTF-8");
         header("Access-Control-Allow-Methods: GET, OPTIONS");
         header("Access-Control-Allow-Headers: Content-Type, Authorization, X-API-KEY");
     }
 
-    private function handlePreflightRequest() {
+    private function handlePreflightRequest()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
             header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
             header("Access-Control-Allow-Headers: Content-Type, Authorization, X-API-KEY");
@@ -34,7 +44,8 @@ class ReadYearsAPI {
         }
     }
 
-    private function validateApiKey() {
+    private function validateApiKey()
+    {
         $providedApiKey = $_SERVER['HTTP_X_API_KEY'] ?? '';
 
         if ($providedApiKey !== $this->apiKey) {
@@ -44,7 +55,8 @@ class ReadYearsAPI {
         }
     }
 
-    public function handleGetRequest() {
+    public function handleGetRequest()
+    {
 
         $this->handlePreflightRequest();
         $this->validateApiKey();
@@ -54,29 +66,27 @@ class ReadYearsAPI {
         if ($method === 'GET') {
             $years = json_encode($this->route->getYears($this->db, $this->dbTable));
 
-                    if ($years) {
-                        echo $years;
-                    } else {
-                        http_response_code(400);
-                        echo json_encode(["message" => "No data found for years."]);
-                        return;
-                    }
-
-                    return;
+            if ($years) {
+                echo $years;
+            } else {
+                http_response_code(400);
+                echo json_encode(["message" => "No data found for years."]);
+                return;
             }
-        
-            http_response_code(405); // Method Not Allowed
-            echo json_encode(["message" => "Unsupported request method."]);
+
+            return;
+        }
+
+        http_response_code(405); // Method Not Allowed
+        echo json_encode(["message" => "Unsupported request method."]);
     }
 }
 
-include_once '../../config/Config.php';
-include_once '../../config/Api.php';
-include_once '../classes/Database.php';
-include_once '../classes/Route.php';
+// include_once '../../config/Config.php';
+// include_once '../../config/Api.php';
+// include_once '../classes/Database.php';
+// include_once '../classes/Route.php';
 
-$database = new Database();
-$route = new Route();
 
 $routeApi = new ReadRouteApi($database, $route, $apiKey);
 $routeApi->handleGetRequest();

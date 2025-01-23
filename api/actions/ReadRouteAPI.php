@@ -2,13 +2,21 @@
 
 namespace Alex\GpsTrackerServer\actions;
 
-class ReadRouteAPI {
+use Alex\GpsTrackerServer\classes\Database;
+use Alex\GpsTrackerServer\classes\Route;
+
+$database = new Database();
+$route = new Route();
+
+class ReadRouteAPI
+{
     private $db;
     private $dbTable;
     private $route;
     private $apiKey;
 
-    public function __construct($database, $route, $apiKey) {
+    public function __construct($database, $route, $apiKey)
+    {
         $this->db = $database->getConnection();
         $this->dbTable = $database->getTableName();
         $this->route = $route;
@@ -17,14 +25,16 @@ class ReadRouteAPI {
         $this->setHeaders();
     }
 
-    private function setHeaders() {
+    private function setHeaders()
+    {
         header("Access-Control-Allow-Origin: *");
         header("Content-Type: application/json; charset=UTF-8");
         header("Access-Control-Allow-Methods: GET, OPTIONS");
         header("Access-Control-Allow-Headers: Content-Type, Authorization, X-API-KEY");
     }
 
-    private function handlePreflightRequest() {
+    private function handlePreflightRequest()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
             header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
             header("Access-Control-Allow-Headers: Content-Type, Authorization, X-API-KEY");
@@ -34,7 +44,8 @@ class ReadRouteAPI {
         }
     }
 
-    private function validateApiKey() {
+    private function validateApiKey()
+    {
         $providedApiKey = $_SERVER['HTTP_X_API_KEY'] ?? '';
 
         if ($providedApiKey !== $this->apiKey) {
@@ -45,7 +56,8 @@ class ReadRouteAPI {
     }
 
 
-    private function toGeoJson($points, $year) {
+    private function toGeoJson($points, $year)
+    {
 
         usort($points, function ($a, $b) {
             return strtotime($a['datatime']) - strtotime($b['datatime']);
@@ -69,7 +81,8 @@ class ReadRouteAPI {
         echo json_encode($geoJson);
     }
 
-    public function handleGetRequest() {
+    public function handleGetRequest()
+    {
 
         $this->handlePreflightRequest();
         $this->validateApiKey();
@@ -138,13 +151,6 @@ class ReadRouteAPI {
     }
 }
 
-include_once '../../config/config.php';
-include_once '../../config/api.php';
-include_once '../classes/database.php';
-include_once '../classes/route.php';
-
-$database = new Database();
-$route = new Route();
 
 $routeApi = new ReadRouteApi($database, $route, $apiKey);
 $routeApi->handleGetRequest();
