@@ -2,10 +2,8 @@
 
 namespace Alex\GpsTrackerServer\classes;
 
-use Alex\GpsTrackerServer\config\Config;
 use PDO;
 use PDOException;
-
 
 class Database {
 

@@ -82,11 +82,5 @@ class ReadYearsAPI
     }
 }
 
-// include_once '../../config/Config.php';
-// include_once '../../config/Api.php';
-// include_once '../classes/Database.php';
-// include_once '../classes/Route.php';
-
-
 $routeApi = new ReadRouteApi($database, $route, $apiKey);
 $routeApi->handleGetRequest();
