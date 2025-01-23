@@ -9,6 +9,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install Composer
+        run: |
+          composer install --no-dev --optimize-autoloader
+
       - name: Generate .env file
         env:
           DB_HOST: ${{ secrets.DB_HOST }}
@@ -36,7 +40,6 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           remote_folder: ${{ secrets.REMOTE_FOLDER }}
           local_folder: "./"
-          # exclude: '[".github/**",".git/**", ".gitignore"," "composer.json", "composer.lock", "src/test/**", "docker-compose.yml","phpunit.yml", "README.md"]'
-          include: '["index.html","api/**", ".env"]'
+          include: '["index.html","api/**", ".env", "vendor/**"]'
           cleanup: false
           passive: true
