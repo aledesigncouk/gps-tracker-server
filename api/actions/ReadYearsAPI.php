@@ -1,9 +1,11 @@
 <?php
-
 namespace Alex\GpsTrackerServer\actions;
+
+require_once '../../vendor/autoload.php';
 
 use Alex\GpsTrackerServer\classes\Database;
 use Alex\GpsTrackerServer\classes\Route;
+use Alex\GpsTrackerServer\config\Config;
 
 $database = new Database();
 $route = new Route();
@@ -82,5 +84,5 @@ class ReadYearsAPI
     }
 }
 
-$routeApi = new ReadRouteApi($database, $route, $apiKey);
-$routeApi->handleGetRequest();
+$routeYears = new ReadYearsApi($database, $route, $apiKey);
+$routeYears->handleGetRequest();

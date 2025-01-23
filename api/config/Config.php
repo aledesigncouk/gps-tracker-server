@@ -9,3 +9,4 @@ $dbName = $env['DB_NAME'];
 $dbUsername = $env['DB_USERNAME'];
 $dbPassword = $env['DB_PASSWORD'];
 $dbTableName = $env['DB_TABLE_NAME'];
+$apiKey = $env['API_KEY'];
