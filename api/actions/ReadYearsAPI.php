@@ -4,6 +4,10 @@
 
 // use Alex\GpsTrackerServer\classes\Database;
 // use Alex\GpsTrackerServer\classes\Route;
+if (function_exists('opcache_reset')) {
+    opcache_reset();
+}
+
 
 include_once '/../config/Config.php';
 include_once '/../config/Api.php';
