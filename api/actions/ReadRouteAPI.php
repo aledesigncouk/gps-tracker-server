@@ -13,7 +13,6 @@ class ReadRouteAPI
     private $db;
     private $dbTable;
     private $route;
-    private $apiKey;
 
     public function __construct($database, $route)
     {
