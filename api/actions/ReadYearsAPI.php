@@ -18,9 +18,6 @@ class ReadYearsAPI
         $this->db = $database->getConnection();
         $this->dbTable = $database->getTableName();
         $this->route = $route;
-        $this->apiKey = $apiKey;
-
-        $this->setHeaders();
     }
 
     public function handleGetRequest($headers)
