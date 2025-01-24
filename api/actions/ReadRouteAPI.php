@@ -6,7 +6,7 @@ require_once '../../vendor/autoload.php';
 
 use Alex\GpsTrackerServer\classes\Database;
 use Alex\GpsTrackerServer\classes\Route;
-use Alex\GpsTrackerServer\config\Config;
+use Alex\GpsTrackerServer\classes\Headers;
 
 class ReadRouteAPI
 {
@@ -15,47 +15,13 @@ class ReadRouteAPI
     private $route;
     private $apiKey;
 
-    public function __construct($database, $route, $apiKey)
+    public function __construct($database, $route)
     {
         $this->db = $database->getConnection();
         $this->dbTable = $database->getTableName();
         $this->route = $route;
-        $this->apiKey = $apiKey;
-
-        $this->setHeaders();
+        
     }
-
-    // extract common code *********
-    private function setHeaders()
-    {
-        header("Access-Control-Allow-Origin: *");
-        header("Content-Type: application/json; charset=UTF-8");
-        header("Access-Control-Allow-Methods: GET, OPTIONS");
-        header("Access-Control-Allow-Headers: Content-Type, Authorization, X-API-KEY");
-    }
-
-    private function handlePreflightRequest()
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-            header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-            header("Access-Control-Allow-Headers: Content-Type, Authorization, X-API-KEY");
-            header("Access-Control-Max-Age: 86400");
-            http_response_code(204);
-            exit;
-        }
-    }
-
-    private function validateApiKey()
-    {
-        $providedApiKey = $_SERVER['HTTP_X_API_KEY'] ?? '';
-
-        if ($providedApiKey !== $this->apiKey) {
-            http_response_code(403);
-            echo json_encode(["message" => "Unauthorized. Invalid API Key."]);
-            exit;
-        }
-    }
-    // *** extract common code ****
 
     private function toGeoJson($points, $year)
     {
@@ -82,11 +48,11 @@ class ReadRouteAPI
         echo json_encode($geoJson);
     }
 
-    public function handleGetRequest()
+    public function handleGetRequest($headers)
     {
 
-        $this->handlePreflightRequest();
-        $this->validateApiKey();
+        $headers->handlePreflightRequest();
+        $headers->validateApiKey();
 
         $method = $_SERVER['REQUEST_METHOD'];
 
@@ -137,7 +103,7 @@ class ReadRouteAPI
 
 $database = new Database();
 $route = new Route();
-$apiKey = Config::get('API_KEY');
+$headers = new Headers();
 
-$routeApi = new ReadRouteApi($database, $route, $apiKey);
-$routeApi->handleGetRequest();
+$routeApi = new ReadRouteApi($database, $route);
+$routeApi->handleGetRequest($headers);
