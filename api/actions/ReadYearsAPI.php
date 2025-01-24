@@ -24,6 +24,8 @@ class ReadYearsAPI
         $this->setHeaders();
     }
 
+
+    // extract common code *********
     private function setHeaders()
     {
         header("Access-Control-Allow-Origin: *");
@@ -53,6 +55,8 @@ class ReadYearsAPI
             exit;
         }
     }
+
+    // *** extract common code ****
 
     public function handleGetRequest()
     {

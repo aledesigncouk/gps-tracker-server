@@ -2,11 +2,11 @@
 
 namespace Alex\GpsTrackerServer\actions;
 
+require_once '../../vendor/autoload.php';
+
 use Alex\GpsTrackerServer\classes\Database;
 use Alex\GpsTrackerServer\classes\Route;
-
-$database = new Database();
-$route = new Route();
+use Alex\GpsTrackerServer\config\Config;
 
 class ReadRouteAPI
 {
@@ -25,6 +25,7 @@ class ReadRouteAPI
         $this->setHeaders();
     }
 
+    // extract common code *********
     private function setHeaders()
     {
         header("Access-Control-Allow-Origin: *");
@@ -54,7 +55,7 @@ class ReadRouteAPI
             exit;
         }
     }
-
+    // *** extract common code ****
 
     private function toGeoJson($points, $year)
     {
@@ -105,23 +106,6 @@ class ReadRouteAPI
                     echo json_encode(["message" => "Missing 'start' parameter."]);
                     return;
 
-                case !$end && $start:
-                    if (!is_numeric($start)) {
-                        http_response_code(400);
-                        echo json_encode(["message" => "Invalid or missing 'year' parameter."]);
-                        return;
-                    }
-
-                    $points = $this->route->getRouteByYear($this->db, $this->dbTable, $start);
-
-                    if ($points) {
-                        $this->toGeoJson($points, $start);
-                    } else {
-                        http_response_code(400);
-                        echo json_encode(["message" => "No data found for the specified year."]);
-                    }
-                    return;
-
                 case $start && $end:
                     if (empty($start) || empty($end) || !is_string($start) || !is_string($end)) {
                         http_response_code(400);
@@ -151,6 +135,9 @@ class ReadRouteAPI
     }
 }
 
+$database = new Database();
+$route = new Route();
+$apiKey = Config::get('API_KEY');
 
 $routeApi = new ReadRouteApi($database, $route, $apiKey);
 $routeApi->handleGetRequest();
