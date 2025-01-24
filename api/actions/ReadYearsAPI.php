@@ -5,16 +5,15 @@ require_once '../../vendor/autoload.php';
 
 use Alex\GpsTrackerServer\classes\Database;
 use Alex\GpsTrackerServer\classes\Route;
-use Alex\GpsTrackerServer\config\Config;
+use Alex\GpsTrackerServer\classes\Headers;
 
 class ReadYearsAPI
 {
     private $db;
     private $dbTable;
     private $route;
-    private $apiKey;
 
-    public function __construct($database, $route, $apiKey)
+    public function __construct($database, $route)
     {
         $this->db = $database->getConnection();
         $this->dbTable = $database->getTableName();
@@ -24,45 +23,11 @@ class ReadYearsAPI
         $this->setHeaders();
     }
 
-
-    // extract common code *********
-    private function setHeaders()
-    {
-        header("Access-Control-Allow-Origin: *");
-        header("Content-Type: application/json; charset=UTF-8");
-        header("Access-Control-Allow-Methods: GET, OPTIONS");
-        header("Access-Control-Allow-Headers: Content-Type, Authorization, X-API-KEY");
-    }
-
-    private function handlePreflightRequest()
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-            header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-            header("Access-Control-Allow-Headers: Content-Type, Authorization, X-API-KEY");
-            header("Access-Control-Max-Age: 86400");
-            http_response_code(204);
-            exit;
-        }
-    }
-
-    private function validateApiKey()
-    {
-        $providedApiKey = $_SERVER['HTTP_X_API_KEY'] ?? '';
-
-        if ($providedApiKey !== $this->apiKey) {
-            http_response_code(403);
-            echo json_encode(["message" => "Unauthorized. Invalid API Key."]);
-            exit;
-        }
-    }
-
-    // *** extract common code ****
-
-    public function handleGetRequest()
+    public function handleGetRequest($headers)
     {
 
-        $this->handlePreflightRequest();
-        $this->validateApiKey();
+        $headers->handlePreflightRequest();
+        $headers->validateApiKey();
 
         $method = $_SERVER['REQUEST_METHOD'];
 
@@ -87,7 +52,7 @@ class ReadYearsAPI
 
 $database = new Database();
 $route = new Route();
-$apiKey = Config::get('API_KEY');
+$headers = new Headers();
 
-$routeYears = new ReadYearsApi($database, $route, $apiKey);
-$routeYears->handleGetRequest();
+$routeYears = new ReadYearsApi($database, $route);
+$routeYears->handleGetRequest($headers);
