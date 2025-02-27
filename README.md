@@ -38,7 +38,7 @@ Follow these steps to set up and run the Nautilus Tracker app on your local mach
  
 #### Set Up Environment Variables
 
-
+...
 
 
 ## Secret credentials
