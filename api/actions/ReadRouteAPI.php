@@ -78,14 +78,18 @@ class ReadRouteAPI
                         return;
                     }
 
+                    // improve the return of an empty array
                     $points = $this->route->getRouteByRange($this->db, $this->dbTable, $start, $end);
 
                     if ($points) {
                         $this->toGeoJson($points, 0000);
+                        
                     } else {
-                        http_response_code(400);
-                        echo json_encode(["message" => "No data found for the specified range."]);
+                        $this->toGeoJson([], 0000);
+                        // http_response_code(200);
+                        // echo json_encode(["message" => "No data found for the specified range."]);
                     }
+
                     return;
 
                 default:
