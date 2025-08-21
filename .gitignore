@@ -4,7 +4,6 @@
 
 # Composer
 composer.phar
-/vendor/
 
 #tests
 .phpunit.*
