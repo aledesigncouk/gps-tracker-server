@@ -37,11 +37,11 @@ jobs:
         uses: sand4rt/ftp-deployer@v1.8
         with:
           sftp: false
-          host: ${{ secrets.FTP_SERVER }}
+          host: ${{ secrets.FTP_SERVER_DEV }}
           port: 21
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
-          remote_folder: ${{ secrets.REMOTE_FOLDER }}
+          remote_folder: ${{ secrets.FTP_FOLDER}}
           local_folder: "./"
           include: '["index.html","api/**", ".env", "vendor/**"]'
           cleanup: false
