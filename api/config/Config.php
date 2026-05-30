@@ -11,16 +11,17 @@ API_KEY
 
 namespace Alex\GpsTrackerServer\config;
 
-$env = parse_ini_file(__DIR__ . '/../../.env');
-
 class Config
 {
     private static $env;
 
     public static function load()
     {
-        if (self::$env === null) {
+        if (!is_array(self::$env)) {
             self::$env = parse_ini_file(__DIR__ . '/../../.env');
+            if (self::$env === false) {
+                throw new \RuntimeException('Failed to load .env configuration file.');
+            }
         }
     }
 
