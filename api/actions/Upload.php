@@ -2,53 +2,57 @@
 
 namespace Alex\GpsTrackerServer\actions;
 
-require_once '../../vendor/autoload.php';
-
 use Alex\GpsTrackerServer\classes\Database;
 use Alex\GpsTrackerServer\classes\Route;
 
-$route = new Route();
-$database = new Database();
+class Upload
+{
+    private $conn;
+    private $dbTable;
+    private $route;
 
-$conn = $database->getConnection();
+    public function __construct($database, $route)
+    {
+        $this->conn    = $database->getConnection();
+        $this->dbTable = $database->getTableName();
+        $this->route   = $route;
+    }
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    renderForm("Please upload a CSV file.");
-    exit;
-}
+    public function handle()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->renderForm();
+            return;
+        }
 
-if (empty($_FILES['csv_file']) || $_FILES['csv_file']['error'] !== UPLOAD_ERR_OK) {
-    renderForm("Error uploading the file.");
-    exit;
-}
+        if (empty($_FILES['csv_file']) || $_FILES['csv_file']['error'] !== UPLOAD_ERR_OK) {
+            $this->renderForm('Error uploading the file.');
+            return;
+        }
 
-$fileTmpPath = $_FILES['csv_file']['tmp_name'];
-$fileName = $_FILES['csv_file']['name'];
-$fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+        $fileName = $_FILES['csv_file']['name'];
 
-if (strtolower(pathinfo($fileName, PATHINFO_EXTENSION)) !== 'csv') {
-    renderForm("Invalid file extension. Only CSV files are allowed.");
-    exit;
-}
+        if (strtolower(pathinfo($fileName, PATHINFO_EXTENSION)) !== 'csv') {
+            $this->renderForm('Invalid file extension. Only CSV files are allowed.');
+            return;
+        }
 
-if (($handle = fopen($fileTmpPath, "r")) === false) {
-    renderForm("Error opening the file.");
-    exit;
-}
+        $handle = fopen($_FILES['csv_file']['tmp_name'], 'r');
+        if ($handle === false) {
+            $this->renderForm('Error opening the file.');
+            return;
+        }
 
-$dbtable = $database->getTableName();
+        $this->route->setRoute($this->conn, $this->dbTable, $handle);
+        fclose($handle);
 
-$route->setRoute($conn, $dbtable, $handle);
+        $this->renderForm('File uploaded and stored successfully.');
+    }
 
-fclose($handle);
-$conn = null;
-
-// check to close connection after the file is uploaded
-// clear form after successful upload
-// more field for other data (may require to add an associated table)
-
-function renderForm($message = '') {
-    echo <<<HTML
+    private function renderForm($message = '')
+    {
+        $escaped = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
+        echo <<<HTML
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -56,6 +60,7 @@ function renderForm($message = '') {
             <title>Upload CSV File</title>
         </head>
         <body>
+            {$escaped}
             <form action="" method="post" enctype="multipart/form-data">
                 <label for="csv_file">Upload CSV file:</label>
                 <input type="file" name="csv_file" id="csv_file" accept=".csv">
@@ -64,6 +69,6 @@ function renderForm($message = '') {
             </form>
         </body>
         </html>
-    HTML;
+        HTML;
+    }
 }
-
