@@ -10,7 +10,6 @@ use Alex\GpsTrackerServer\actions\ReadYearsAPI;
 use Alex\GpsTrackerServer\actions\Upload;
 
 $headers = new Headers();
-$headers->setHeaders();
 $headers->handlePreflightRequest();
 
 $path    = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -21,11 +20,13 @@ $route    = new Route();
 
 switch ($segment) {
     case 'track':
+        $headers->setHeaders();
         $headers->validateApiKey();
         (new ReadRouteAPI($database, $route))->handleGetRequest();
         break;
 
     case 'years':
+        $headers->setHeaders();
         $headers->validateApiKey();
         (new ReadYearsAPI($database, $route))->handleGetRequest();
         break;
@@ -35,6 +36,7 @@ switch ($segment) {
         break;
 
     default:
+        $headers->setHeaders();
         http_response_code(404);
         echo json_encode(['message' => 'Endpoint not found.']);
 }
