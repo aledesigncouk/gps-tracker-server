@@ -21,7 +21,7 @@ class Database
 		$this->dbUser = Config::get('DB_USERNAME');
 		$this->dbPwd = Config::get('DB_PASSWORD');
 		$this->db = Config::get('DB_NAME');
-		$this->dbTable = Config::get('DB_TABLE_NAME');
+		$this->dbTable = Config::get('DB_TABLE');
 		$this->conn = null;
 	}
 
