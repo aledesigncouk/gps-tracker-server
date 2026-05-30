@@ -2,6 +2,8 @@
 
 namespace Alex\GpsTrackerServer\actions;
 
+require_once '../../vendor/autoload.php';
+
 use Alex\GpsTrackerServer\classes\Database;
 use Alex\GpsTrackerServer\classes\Route;
 
@@ -10,21 +12,21 @@ $database = new Database();
 
 $conn = $database->getConnection();
 
-if(!$conn) {
-    die("Failed to connect.");
-}
-
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     renderForm("Please upload a CSV file.");
+    exit;
+}
+
+if (empty($_FILES['csv_file']) || $_FILES['csv_file']['error'] !== UPLOAD_ERR_OK) {
+    renderForm("Error uploading the file.");
     exit;
 }
 
 $fileTmpPath = $_FILES['csv_file']['tmp_name'];
 $fileName = $_FILES['csv_file']['name'];
 $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-$allowedExtensions = ['csv'];
 
-if (!in_array($fileExtension, $allowedExtensions)) {
+if (strtolower(pathinfo($fileName, PATHINFO_EXTENSION)) !== 'csv') {
     renderForm("Invalid file extension. Only CSV files are allowed.");
     exit;
 }
@@ -40,11 +42,6 @@ $route->setRoute($conn, $dbtable, $handle);
 
 fclose($handle);
 $conn = null;
-
-if (empty($_FILES['csv_file']) || $_FILES['csv_file']['error'] !== UPLOAD_ERR_OK) {
-    renderForm("Error uploading the file.");
-    exit;
-}
 
 // check to close connection after the file is uploaded
 // clear form after successful upload
