@@ -34,21 +34,25 @@ class Route {
 
         $stmt = $conn->prepare("INSERT INTO `" .$dbtable. "` (datatime, lat, lon) VALUES (:dt, :lat, :lng)");
    
-        while (($data = fgetcsv($handle, 1000, ",")) !== false) {
+        while (($data = fgetcsv($handle, 0, ",")) !== false) {
             if (count($data) < 3) {
-                continue; // Skip incomplete rows
+                continue;
             }
-        
+
             $datetime = DateTime::createFromFormat('d/m/Y H:i:s', $data[0]);
-            $dt = $datetime ? $datetime->format('Y-m-d H:i:s') : null; // datetime cannot be null! improve this
+            if (!$datetime) {
+                continue; // Skip header row and any rows with unrecognised date format
+            }
+
+            $dt  = $datetime->format('Y-m-d H:i:s');
             $lat = (float)$data[1];
             $lng = (float)$data[2];
-        
+
             $stmt->bindParam(':dt', $dt, PDO::PARAM_STR);
-            $stmt->bindParam(':lat', $lat); // to check the best data format for the database
+            $stmt->bindParam(':lat', $lat);
             $stmt->bindParam(':lng', $lng);
             $stmt->execute();
-        }   
+        }
     }
 
     public function getYears(PDO $conn, $dbtable) {
