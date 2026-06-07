@@ -26,6 +26,6 @@ class ReadYearsAPI
             return;
         }
 
-        echo json_encode($this->route->getYears($this->db, $this->dbTable));
+        echo json_encode(['years' => $this->route->getYears($this->db, $this->dbTable)]);
     }
 }
