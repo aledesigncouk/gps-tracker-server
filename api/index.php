@@ -35,6 +35,11 @@ switch ($segment) {
         (new Upload($database, $route))->handle();
         break;
 
+    case 'test':
+        $headers->setHeaders();
+        echo json_encode(['message' => 'Hello, Nautilus!']);
+        break;
+
     default:
         $headers->setHeaders();
         http_response_code(404);
