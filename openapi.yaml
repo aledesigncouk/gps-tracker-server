@@ -1,0 +1,255 @@
+openapi: 3.0.3
+info:
+  title: Nautilus Tracker API
+  description: >
+    Server-side API providing access to GPS tracking data stored in a MySQL
+    database. Exposes endpoints to retrieve GPS track data, query available
+    years, and upload new data via CSV.
+  version: "1.0"
+  contact:
+    name: Alex Deidda
+    email: alex.deidda@aledesign.co.uk
+
+servers:
+  - url: /api
+
+tags:
+  - name: Health
+    description: Service health check
+  - name: Track
+    description: GPS track data
+  - name: Upload
+    description: CSV data ingestion
+
+paths:
+  /test:
+    get:
+      tags: [Health]
+      summary: Health check
+      description: Returns a static message confirming the API is reachable. No authentication required.
+      operationId: getTest
+      responses:
+        "200":
+          description: Service is up.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Hello, Nautilus!
+
+  /track:
+    get:
+      tags: [Track]
+      summary: Get GPS track for a date range
+      description: >
+        Returns GPS track points recorded within the given datetime range as a
+        GeoJSON `Feature` containing a `LineString`. Requires an API key.
+      operationId: getTrack
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: start
+          in: query
+          required: true
+          description: Start datetime (inclusive), format `YYYY-MM-DD HH:MM:SS`.
+          schema:
+            type: string
+          example: "2023-09-01 00:00:00"
+        - name: end
+          in: query
+          required: true
+          description: End datetime (exclusive), format `YYYY-MM-DD HH:MM:SS`.
+          schema:
+            type: string
+          example: "2023-09-30 23:59:59"
+      responses:
+        "200":
+          description: GeoJSON Feature containing the track's coordinates.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeoJsonLineStringFeature"
+        "400":
+          description: Missing `start` and/or `end` query parameter.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+              examples:
+                missingBoth:
+                  value: { message: "Missing 'start' and 'end' parameters." }
+                missingStart:
+                  value: { message: "Missing 'start' parameter." }
+                missingEnd:
+                  value: { message: "Missing 'end' parameter." }
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+
+  /years:
+    get:
+      tags: [Track]
+      summary: List years with recorded data
+      description: Returns the distinct list of years present in the database. Requires an API key.
+      operationId: getYears
+      security:
+        - ApiKeyAuth: []
+      responses:
+        "200":
+          description: List of years.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  years:
+                    type: array
+                    items:
+                      type: integer
+                example:
+                  years: [2022, 2023, 2024]
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+
+  /upload:
+    get:
+      tags: [Upload]
+      summary: Show the CSV upload form
+      description: Serves an HTML page with a file upload form. No authentication required.
+      operationId: getUploadForm
+      responses:
+        "200":
+          description: HTML upload form.
+          content:
+            text/html:
+              schema:
+                type: string
+    post:
+      tags: [Upload]
+      summary: Upload a CSV file of track points
+      description: >
+        Uploads a CSV file and stores its rows in the database. Each row must
+        contain at least three fields: datetime (`DD/MM/YYYY HH:MM:SS`),
+        latitude, and longitude. Rows with an unrecognised date format
+        (e.g. a header row) are skipped. Responds with the HTML form
+        annotated with a status message. No authentication required.
+      operationId: postUpload
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                csv_file:
+                  type: string
+                  format: binary
+                  description: CSV file containing rows of `datetime,lat,lon`.
+              required:
+                - csv_file
+      responses:
+        "200":
+          description: >
+            HTML upload form annotated with a success or error message.
+            Note: this endpoint always returns HTTP 200, even when the
+            upload itself failed (e.g. missing file, wrong extension) —
+            the outcome is only reflected in the page's message text.
+          content:
+            text/html:
+              schema:
+                type: string
+
+  /{unknown}:
+    get:
+      tags: [Health]
+      summary: Unknown endpoint
+      description: Any path segment not matching a defined endpoint.
+      operationId: getNotFound
+      parameters:
+        - name: unknown
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "404":
+          description: Endpoint not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+              example:
+                message: Endpoint not found.
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+      description: API key configured via the `API_KEY` environment variable.
+
+  responses:
+    Forbidden:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorMessage"
+          example:
+            message: "Unauthorized. Invalid API Key."
+    MethodNotAllowed:
+      description: Unsupported HTTP method for this endpoint.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorMessage"
+          example:
+            message: "Unsupported request method."
+
+  schemas:
+    ErrorMessage:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+
+    GeoJsonLineStringFeature:
+      type: object
+      description: GeoJSON Feature whose geometry is a LineString of `[lat, lon]` pairs ordered by datetime.
+      properties:
+        type:
+          type: string
+          enum: [Feature]
+        properties:
+          type: object
+        geometry:
+          type: object
+          properties:
+            type:
+              type: string
+              enum: [LineString]
+            coordinates:
+              type: array
+              items:
+                type: array
+                items:
+                  type: number
+                minItems: 2
+                maxItems: 2
+      example:
+        type: Feature
+        properties: {}
+        geometry:
+          type: LineString
+          coordinates:
+            - [52.666, -2.474]
+            - [52.667, -2.475]
