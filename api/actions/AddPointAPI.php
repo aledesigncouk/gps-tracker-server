@@ -21,9 +21,9 @@ class AddPointAPI
         $this->route   = $route;
     }
 
-    public function handlePostRequest()
+    public function handleGetRequest()
     {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
             http_response_code(405);
             echo json_encode(['message' => 'Unsupported request method.']);
             return;
