@@ -35,7 +35,7 @@ switch ($segment) {
     case 'point':
         $headers->setHeaders();
         $headers->validateApiKey();
-        (new AddPointAPI($database, $route))->handleGetRequest();
+        (new AddPointAPI($database, $route))->handlePostRequest();
         break;
 
     case 'upload':

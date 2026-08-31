@@ -118,15 +118,12 @@ paths:
           $ref: "#/components/responses/MethodNotAllowed"
 
   /point:
-    get:
+    post:
       tags: [Track]
       summary: Record a single GPS point
       description: >
         Inserts a single GPS point into the database. Requires an API key.
-        Note: this is a state-changing operation exposed via GET rather than
-        POST, to accommodate tracker hardware that can only issue simple GET
-        requests.
-      operationId: getPoint
+      operationId: postPoint
       security:
         - ApiKeyAuth: []
       parameters:

@@ -62,7 +62,7 @@ Returns a list of all years present in the database. Requires an API key.
 
 ---
 
-### `GET /api/point`
+### `POST /api/point`
 
 Records a single GPS point. Requires an API key.
 
@@ -76,7 +76,7 @@ Records a single GPS point. Requires an API key.
 
 **Example request:**
 ```
-GET /api/point?lat=51.5074&lon=-0.1278&timestamp=2026-08-22T14:30:00Z
+POST /api/point?lat=51.5074&lon=-0.1278&timestamp=2026-08-22T14:30:00Z
 ```
 
 **Example response:**
