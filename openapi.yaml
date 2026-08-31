@@ -4,7 +4,7 @@ info:
   description: >
     Server-side API providing access to GPS tracking data stored in a MySQL
     database. Exposes endpoints to retrieve GPS track data, query available
-    years, and upload new data via CSV.
+    years, upload new data via CSV, and record individual GPS points.
   version: "1.0"
   contact:
     name: Alex Deidda
@@ -112,6 +112,77 @@ paths:
                       type: integer
                 example:
                   years: [2022, 2023, 2024]
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+
+  /point:
+    post:
+      tags: [Track]
+      summary: Record a single GPS point
+      description: >
+        Inserts a single GPS point into the database. Requires an API key.
+      operationId: postPoint
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: lat
+          in: query
+          required: true
+          description: Latitude, between -90 and 90.
+          schema:
+            type: number
+          example: 51.5074
+        - name: lon
+          in: query
+          required: true
+          description: Longitude, between -180 and 180.
+          schema:
+            type: number
+          example: -0.1278
+        - name: timestamp
+          in: query
+          required: true
+          description: ISO 8601 datetime.
+          schema:
+            type: string
+            format: date-time
+          example: "2026-08-22T14:30:00Z"
+      responses:
+        "201":
+          description: Point recorded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  datatime:
+                    type: string
+                  lat:
+                    type: number
+                  lon:
+                    type: number
+              example:
+                id: 123
+                datatime: "2026-08-22 14:30:00"
+                lat: 51.5074
+                lon: -0.1278
+        "400":
+          description: Missing or invalid `lat`, `lon`, or `timestamp`.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+              examples:
+                missing:
+                  value: { message: "Missing required parameter(s): lat, timestamp." }
+                invalidLat:
+                  value: { message: "Invalid 'lat' parameter. Must be a number between -90 and 90." }
+                invalidTimestamp:
+                  value: { message: "Invalid 'timestamp' parameter. Must be a valid ISO 8601 datetime (e.g. 2026-08-22T14:30:00Z)." }
         "403":
           $ref: "#/components/responses/Forbidden"
         "405":

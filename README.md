@@ -62,6 +62,35 @@ Returns a list of all years present in the database. Requires an API key.
 
 ---
 
+### `POST /api/point`
+
+Records a single GPS point. Requires an API key.
+
+**Query parameters:**
+
+| Parameter | Required | Description |
+|-----------|----------|-------------|
+| `lat` | yes | Latitude, between -90 and 90 |
+| `lon` | yes | Longitude, between -180 and 180 |
+| `timestamp` | yes | ISO 8601 datetime (e.g. `2026-08-22T14:30:00Z`) |
+
+**Example request:**
+```
+POST /api/point?lat=51.5074&lon=-0.1278&timestamp=2026-08-22T14:30:00Z
+```
+
+**Example response:**
+```json
+{
+    "id": 123,
+    "datatime": "2026-08-22 14:30:00",
+    "lat": 51.5074,
+    "lon": -0.1278
+}
+```
+
+---
+
 ### `POST /api/upload`
 
 Uploads a CSV file and stores its rows in the database. A browser form is served on `GET`.
@@ -79,7 +108,7 @@ DD/MM/YYYY HH:MM:SS, latitude, longitude
 
 ## Authentication
 
-The `track` and `years` endpoints require an `API_KEY` header. The key is configured via the `API_KEY` environment variable (see Configuration below).
+The `track`, `years`, and `point` endpoints require an `API_KEY` header. The key is configured via the `API_KEY` environment variable (see Configuration below).
 
 ---
 

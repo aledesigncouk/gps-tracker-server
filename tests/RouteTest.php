@@ -56,4 +56,26 @@ class RouteTest extends TestCase {
 
         $this->assertNotContains(['2023-03-01 00:00:00', '2025-04-11 00:00:00'], $result);
     }
+
+    public function testAddPoint() {
+
+        $mockConn = new PDO('mysql:host=127.0.0.1;dbname=test_db', 'test_user', 'test_password', [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        ]);
+
+        $route = new Route();
+        $id = $route->addPoint($mockConn, 'test_table', '2026-08-22 14:30:00', 51.5074, -0.1278);
+
+        $this->assertGreaterThan(0, $id);
+
+        $stmt = $mockConn->prepare("SELECT * FROM test_table WHERE id = :id");
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $this->assertEquals('2026-08-22 14:30:00', $result['datatime']);
+        $this->assertEquals(51.5074, $result['lat']);
+        $this->assertEquals(-0.1278, $result['lon']);
+    }
 }

@@ -55,6 +55,18 @@ class Route {
         }
     }
 
+    public function addPoint(PDO $conn, $dbtable, $datatime, $lat, $lon) {
+
+        $stmt = $conn->prepare("INSERT INTO `" .$dbtable. "` (datatime, lat, lon) VALUES (:dt, :lat, :lng)");
+
+        $stmt->bindParam(':dt', $datatime, PDO::PARAM_STR);
+        $stmt->bindParam(':lat', $lat);
+        $stmt->bindParam(':lng', $lon);
+        $stmt->execute();
+
+        return (int) $conn->lastInsertId();
+    }
+
     public function getYears(PDO $conn, $dbtable) {
         $stmt = $conn->prepare("SELECT DISTINCT YEAR(STR_TO_DATE(datatime, '%Y-%m-%d %H:%i:%s')) AS year FROM `" . $dbtable . "`");
         $stmt->execute();
