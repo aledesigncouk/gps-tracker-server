@@ -4,7 +4,8 @@ info:
   description: >
     Server-side API providing access to GPS tracking data stored in a MySQL
     database. Exposes endpoints to retrieve GPS track data, query available
-    years, upload new data via CSV, and record individual GPS points.
+    years, upload new data via CSV, record individual GPS points, and fetch
+    the most recently recorded point.
   version: "1.0"
   contact:
     name: Alex Deidda
@@ -114,6 +115,49 @@ paths:
                   years: [2022, 2023, 2024]
         "403":
           $ref: "#/components/responses/Forbidden"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+
+  /latest:
+    get:
+      tags: [Track]
+      summary: Get the most recent GPS point
+      description: >
+        Returns the single most recent GPS point recorded. Requires an API key.
+      operationId: getLatest
+      security:
+        - ApiKeyAuth: []
+      responses:
+        "200":
+          description: The latest recorded point.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  datatime:
+                    type: string
+                  lat:
+                    type: number
+                  lon:
+                    type: number
+              example:
+                id: 123
+                datatime: "2026-08-22 14:30:00"
+                lat: 51.5074
+                lon: -0.1278
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          description: No points have been recorded yet.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+              example:
+                message: "No points recorded yet."
         "405":
           $ref: "#/components/responses/MethodNotAllowed"
 
@@ -235,28 +279,6 @@ paths:
             text/html:
               schema:
                 type: string
-
-  /{unknown}:
-    get:
-      tags: [Health]
-      summary: Unknown endpoint
-      description: Any path segment not matching a defined endpoint.
-      operationId: getNotFound
-      parameters:
-        - name: unknown
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "404":
-          description: Endpoint not found.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorMessage"
-              example:
-                message: Endpoint not found.
 
 components:
   securitySchemes:
