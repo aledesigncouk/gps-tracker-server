@@ -8,6 +8,7 @@ use Alex\GpsTrackerServer\classes\Headers;
 use Alex\GpsTrackerServer\actions\ReadRouteAPI;
 use Alex\GpsTrackerServer\actions\ReadYearsAPI;
 use Alex\GpsTrackerServer\actions\AddPointAPI;
+use Alex\GpsTrackerServer\actions\ReadLatestAPI;
 use Alex\GpsTrackerServer\actions\Upload;
 
 $headers = new Headers();
@@ -36,6 +37,12 @@ switch ($segment) {
         $headers->setHeaders();
         $headers->validateApiKey();
         (new AddPointAPI($database, $route))->handlePostRequest();
+        break;
+
+    case 'latest':
+        $headers->setHeaders();
+        $headers->validateApiKey();
+        (new ReadLatestAPI($database, $route))->handleGetRequest();
         break;
 
     case 'upload':

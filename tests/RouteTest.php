@@ -78,4 +78,26 @@ class RouteTest extends TestCase {
         $this->assertEquals(51.5074, $result['lat']);
         $this->assertEquals(-0.1278, $result['lon']);
     }
+
+    public function testGetLatestPoint() {
+
+        $mockConn = new PDO('mysql:host=127.0.0.1;dbname=test_db', 'test_user', 'test_password', [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        ]);
+
+        $route = new Route();
+
+        // Insert a point with a far-future timestamp so it's guaranteed to be
+        // the latest regardless of what other tests have already inserted
+        // into this shared table, or the order tests run in.
+        $id = $route->addPoint($mockConn, 'test_table', '2030-01-01 00:00:00', 33.333, 44.444);
+
+        $result = $route->getLatestPoint($mockConn, 'test_table');
+
+        $this->assertEquals($id, $result['id']);
+        $this->assertEquals('2030-01-01 00:00:00', $result['datatime']);
+        $this->assertEquals(33.333, $result['lat']);
+        $this->assertEquals(44.444, $result['lon']);
+    }
 }

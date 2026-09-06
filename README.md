@@ -62,6 +62,22 @@ Returns a list of all years present in the database. Requires an API key.
 
 ---
 
+### `GET /api/latest`
+
+Returns the single most recent GPS point recorded. Requires an API key.
+
+**Example response:**
+```json
+{
+    "id": 123,
+    "datatime": "2026-08-22 14:30:00",
+    "lat": 51.5074,
+    "lon": -0.1278
+}
+```
+
+---
+
 ### `POST /api/point`
 
 Records a single GPS point. Requires an API key.
@@ -108,7 +124,7 @@ DD/MM/YYYY HH:MM:SS, latitude, longitude
 
 ## Authentication
 
-The `track`, `years`, and `point` endpoints require an `API_KEY` header. The key is configured via the `API_KEY` environment variable (see Configuration below).
+The `track`, `years`, `latest`, and `point` endpoints require an `API_KEY` header. The key is configured via the `API_KEY` environment variable (see Configuration below).
 
 ---
 
